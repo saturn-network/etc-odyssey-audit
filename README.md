@@ -2,6 +2,8 @@
 
 Built with [Saturn Dapp Dev Kit](https://www.saturn.network/blog/ethereum-dapp-development-kit/)!
 
+![coverage report](https://forum.saturn.network/uploads/default/optimized/2X/d/d2396f975d189e51c5b5181408a414fbd4abd6df_2_1306x1000.png)
+
 ## Note
 
 The auditor was provided the source code without explanation of how it is being used. The use cases for this smart contract, and the potential pitfalls (aka what exactly are we testing for?) were determined solely at auditor's discretion based on information provided on https://etcodyssey.com/ and by getting some experience playing the game in a testnet.

@@ -1,0 +1,14 @@
+{
+    "contractsDir": "contracts",
+    "artifactsDir": "artifacts",
+    "contracts": ["ETCOdyssey.sol"],
+    "solcVersion": "0.4.20",
+    "compilerSettings": {
+        "optimizer": { "enabled": true, "runs": 200 },
+        "outputSelection": {
+            "*": {
+                "*": ["abi", "evm.bytecode.object"]
+            }
+        }
+    }
+}

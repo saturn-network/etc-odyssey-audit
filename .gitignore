@@ -67,3 +67,6 @@ cache
 # coverage/profiler report
 .coverage_artifacts
 .coverage_contracts
+coverage.json
+coverage/coverage-final.json
+coverage/lcov.info

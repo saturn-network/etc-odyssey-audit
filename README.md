@@ -2,7 +2,7 @@
 
 Built with [Saturn Dapp Dev Kit](https://www.saturn.network/blog/ethereum-dapp-development-kit/)!
 
-![coverage report](https://forum.saturn.network/uploads/default/optimized/2X/d/d2396f975d189e51c5b5181408a414fbd4abd6df_2_1306x1000.png)
+![audited by saturn](https://www.saturn.network/blog/content/images/2020/02/smart-contract-audited-etc-odssey-1.png)
 
 ## Note
 
@@ -24,6 +24,8 @@ Ultimately, the game was tested with the test suite of the following quality:
 * **97.3%** line coverage
 
 Uncovered lines and branches can be examined visually by running the reproduce step of this document, or by viewing `coverage/index.html` in your web browser.
+
+![coverage report](https://forum.saturn.network/uploads/default/optimized/2X/d/d2396f975d189e51c5b5181408a414fbd4abd6df_2_1306x1000.png)
 
 While there is no guarantee that an audited contract has zero bugs, the auditor believes this game to be safe to use and not have any exploitable holes. The final result is an improved, safer codebase. Only small bugs were discovered during the audit with no fund-threatening vulnerabilities.
 

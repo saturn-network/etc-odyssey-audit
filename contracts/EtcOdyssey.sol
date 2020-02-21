@@ -65,6 +65,17 @@ contract ETCOdyssey is ContractReceiver {
   uint[10] maxSP = [50, 100, 150, 200, 250, 300, 350, 400, 450, 500];
 
   event Raid(address winner, uint256 stardust, uint256 darkmatter, uint256 damage, address loser);
+  event NewShip(address player, uint256 referralId);
+  event DarkMatterPurchase(address player, uint256 darkMatter);
+  event ReactorUpgrade(address player, uint256 level);
+  event BlasterUpgrade(address player, uint256 level);
+  event ThrusterUpgrade(address player, uint256 level);
+  event HullUpgrade(address player, uint256 level);
+  event ShipRepaired(address player, uint256 repairPrice);
+  event Fusion(address player, uint256 fusedAmount, uint256 totalFused, uint256 cooldown);
+  event Withdrawal(address player, uint256 etherAmount);
+  event OnexWithdrawal(address player, uint256 starDustAmount, uint256 onexAmount);
+
 
   function ETCOdyssey(
     address onextokenaddress
@@ -136,6 +147,7 @@ contract ETCOdyssey is ContractReceiver {
     playerList[msg.sender].shields = 50;
     playerList[msg.sender].hp = 50;
     admin.transfer(msg.value/20);
+    NewShip(msg.sender, referralNonce - 1);
   }
 
   function buyDarkMatter() public nonReentrant payable {
@@ -148,6 +160,7 @@ contract ETCOdyssey is ContractReceiver {
       playerList[referrer[msg.sender]].darkMatter += earnedMatter / 100;
     }
     admin.transfer(msg.value / 20);
+    DarkMatterPurchase(msg.sender, earnedMatter);
   }
 
   function purchaseUpgradeReactor() public nonReentrant {
@@ -157,6 +170,7 @@ contract ETCOdyssey is ContractReceiver {
     require(upgradeCost[playerList[msg.sender].reactor + 1] <= playerList[msg.sender].darkMatter);
     playerList[msg.sender].darkMatter = playerList[msg.sender].darkMatter.sub(upgradeCost[playerList[msg.sender].reactor + 1]);
     playerList[msg.sender].reactor += 1;
+    ReactorUpgrade(msg.sender, playerList[msg.sender].reactor);
   }
 
   function purchaseUpgradeBlasters() public nonReentrant {
@@ -166,6 +180,7 @@ contract ETCOdyssey is ContractReceiver {
     require(upgradeCost[playerList[msg.sender].blasters + 1] <= playerList[msg.sender].darkMatter);
     playerList[msg.sender].darkMatter = playerList[msg.sender].darkMatter.sub(upgradeCost[playerList[msg.sender].blasters + 1]);
     playerList[msg.sender].blasters += 1;
+    BlasterUpgrade(msg.sender, playerList[msg.sender].blasters);
   }
 
   function purchaseUpgradeThrusters() public nonReentrant {
@@ -180,6 +195,7 @@ contract ETCOdyssey is ContractReceiver {
     } else {
       playerList[msg.sender].thrusterTimer = 0;
     }
+    ThrusterUpgrade(msg.sender, playerList[msg.sender].thrusters);
   }
 
   function purchaseUpgradeHull() public nonReentrant {
@@ -190,6 +206,7 @@ contract ETCOdyssey is ContractReceiver {
     playerList[msg.sender].darkMatter = playerList[msg.sender].darkMatter.sub(upgradeCost[playerList[msg.sender].hull + 1]);
     playerList[msg.sender].hull += 1;
     playerList[msg.sender].hp = maxHP[playerList[msg.sender].hull];
+    HullUpgrade(msg.sender, playerList[msg.sender].hull);
   }
 
   function startRaid() public nonReentrant {
@@ -256,6 +273,7 @@ contract ETCOdyssey is ContractReceiver {
       playerList[msg.sender].hp = repUnits + playerList[msg.sender].hp;
     }
     admin.transfer(earnedValue/20);
+    ShipRepaired(msg.sender, earnedValue);
   }
 
   // fusion deposit function - allows users to "freeze", or "fuse", their star dust
@@ -265,6 +283,7 @@ contract ETCOdyssey is ContractReceiver {
     totalFused += amount;
     playerList[msg.sender].fused += amount;
     playerList[msg.sender].cooldown = now + fuseCooldown;
+    Fusion(msg.sender, amount, playerList[msg.sender].fused, playerList[msg.sender].cooldown);
   }
 
   // Fusion withdraw function - allows user to withdraw from the fusion pool
@@ -272,9 +291,11 @@ contract ETCOdyssey is ContractReceiver {
     updateStats(msg.sender);
     require(playerList[msg.sender].fused > 0);
     require(now >= playerList[msg.sender].cooldown);
-    msg.sender.transfer((this.balance * potPercentage / 100) * playerList[msg.sender].fused / totalFused);
+    uint256 etherAmount = (this.balance * potPercentage / 100) * playerList[msg.sender].fused / totalFused;
+    msg.sender.transfer(etherAmount);
     totalFused = totalFused.sub(playerList[msg.sender].fused);
     playerList[msg.sender].fused = 0;
+    Withdrawal(msg.sender, etherAmount);
   }
 
   function changePot(uint256 percentage) public {
@@ -291,6 +312,7 @@ contract ETCOdyssey is ContractReceiver {
       ERC223(onexAddress).transfer(msg.sender, onexamount);
       onexBalance = onexBalance.sub(onexamount);
     }
+    OnexWithdrawal(msg.sender, amount, onexamount);
   }
 
   function adminWithdrawONEX(uint256 amount) public {
